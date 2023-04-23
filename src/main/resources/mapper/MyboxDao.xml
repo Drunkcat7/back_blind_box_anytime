@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.back_blind_box_anytime.dao.MyboxDao">
+
+    <resultMap type="com.back_blind_box_anytime.entity.Mybox" id="MyboxMap">
+        <result property="myboxId" column="mybox_id" jdbcType="INTEGER"/>
+        <result property="uid" column="uid" jdbcType="INTEGER"/>
+        <result property="seriesId" column="series_id" jdbcType="INTEGER"/>
+        <result property="goodsId" column="goods_id" jdbcType="INTEGER"/>
+        <result property="status" column="status" jdbcType="INTEGER"/>
+    </resultMap>
+
+    <!--插入订单-->
+    <insert id="insertOrder" keyProperty="myboxId" useGeneratedKeys="true">
+        insert into blind_box_database.mybox(uid, series_id, goods_id)
+        values (#{uid}, #{seriesId}, #{goodsId})
+    </insert>
+
+    <!--查询单个-->
+    <select id="queryById" resultMap="MyboxMap">
+        select mybox_id,
+               uid,
+               series_id,
+               goods_id,
+               status
+        from blind_box_database.mybox
+        where mybox_id = #{myboxId}
+    </select>
+
+    <!--查询指定行数据-->
+    <select id="queryAllByLimit" resultMap="MyboxMap">
+        select mybox_id,
+               uid,
+               series_id,
+               goods_id,
+               status
+        from blind_box_database.mybox limit #{offset}, #{limit}
+    </select>
+
+    <!--通过实体作为筛选条件查询-->
+    <select id="queryAll" resultMap="MyboxMap">
+        select
+        mybox_id, uid, series_id, goods_id, status
+        from blind_box_database.mybox
+        <where>
+            <if test="myboxId != null">
+                and mybox_id = #{myboxId}
+            </if>
+            <if test="uid != null">
+                and uid = #{uid}
+            </if>
+            <if test="seriesId != null">
+                and series_id = #{seriesId}
+            </if>
+            <if test="goodsId != null">
+                and goods_id = #{goodsId}
+            </if>
+            <if test="status != null">
+                and status = #{status}
+            </if>
+        </where>
+    </select>
+
+    <!--新增所有列-->
+    <insert id="insert" keyProperty="myboxId" useGeneratedKeys="true">
+        insert into blind_box_database.mybox(uid, series_id, goods_id, status)
+        values (#{uid}, #{seriesId}, #{goodsId}, #{status})
+    </insert>
+
+    <insert id="insertBatch" keyProperty="myboxId" useGeneratedKeys="true">
+        insert into blind_box_database.mybox(uid, series_id, goods_id, status)
+        values
+        <foreach collection="entities" item="entity" separator=",">
+            (#{entity.uid}, #{entity.seriesId}, #{entity.goodsId}, #{entity.status})
+        </foreach>
+    </insert>
+
+    <insert id="insertOrUpdateBatch" keyProperty="myboxId" useGeneratedKeys="true">
+        insert into blind_box_database.mybox(uid, series_id, goods_id, status)
+        values
+        <foreach collection="entities" item="entity" separator=",">
+            (#{entity.uid}, #{entity.seriesId}, #{entity.goodsId}, #{entity.status})
+        </foreach>
+        on duplicate key update
+        uid = values(uid) , series_id = values(series_id) , goods_id = values(goods_id) , status = values(status)
+    </insert>
+
+    <!--通过主键修改数据-->
+    <update id="update">
+        update blind_box_database.mybox
+        <set>
+            <if test="uid != null">
+                uid = #{uid},
+            </if>
+            <if test="seriesId != null">
+                series_id = #{seriesId},
+            </if>
+            <if test="goodsId != null">
+                goods_id = #{goodsId},
+            </if>
+            <if test="status != null">
+                status = #{status},
+            </if>
+        </set>
+        where mybox_id = #{myboxId}
+    </update>
+
+    <!--通过主键删除-->
+    <delete id="deleteById">
+        delete
+        from blind_box_database.mybox
+        where mybox_id = #{myboxId}
+    </delete>
+
+</mapper>
+

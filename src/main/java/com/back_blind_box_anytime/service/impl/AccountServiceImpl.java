@@ -1,13 +1,7 @@
 package com.back_blind_box_anytime.service.impl;
 
-import com.back_blind_box_anytime.dao.GoodsDao;
-import com.back_blind_box_anytime.dao.ProbabilityDao;
-import com.back_blind_box_anytime.dao.SeriesDao;
-import com.back_blind_box_anytime.entity.Account;
-import com.back_blind_box_anytime.dao.AccountDao;
-import com.back_blind_box_anytime.entity.Goods;
-import com.back_blind_box_anytime.entity.Probability;
-import com.back_blind_box_anytime.entity.Series;
+import com.back_blind_box_anytime.dao.*;
+import com.back_blind_box_anytime.entity.*;
 import com.back_blind_box_anytime.service.AccountService;
 import com.back_blind_box_anytime.service.SeriesService;
 import com.back_blind_box_anytime.tools.JwtUtil;
@@ -35,6 +29,8 @@ public class AccountServiceImpl implements AccountService {
     private GoodsDao goodsDao;
     @Resource
     private ProbabilityDao probabilityDao;
+    @Resource
+    private MyboxDao myboxDao;
 
 
 
@@ -71,19 +67,27 @@ public class AccountServiceImpl implements AccountService {
         int random_1 = (int) (Math.random()*max+1);
         int random_2 = 0;
 
-        Goods winGoods;
+        Goods winGoods = null;
 
         if (random_1 == 1){
 //            抽中稀有款，进行第二轮抽奖
             random_2 = (int) (Math.random() * goodsRareList.size());
-            System.out.println(" 抽中稀有款，进行第二轮抽奖"+random_2);
             winGoods = goodsRareList.get(random_2);
+            System.out.println("稀有款：" + random_2 + winGoods.getGoodsName());
         }else {
 //            抽中普通款，进行第二轮抽奖
             random_2 = (int) (Math.random() * goodsOrdinaryList.size());
-            System.out.println(" 普通，进行第二轮抽奖"+random_2);
             winGoods = goodsOrdinaryList.get(random_2);
+            System.out.println("普通款：" + random_2 + winGoods.getGoodsName());
         }
+
+
+        // 生成订单
+        Mybox mybox = new Mybox();
+        mybox.setGoodsId(winGoods.getGoodsId());
+        mybox.setSeriesId(winGoods.getSeriesId());
+        mybox.setUid(uid);
+        this.myboxDao.insertOrder(mybox);
 
         return winGoods;
     }
