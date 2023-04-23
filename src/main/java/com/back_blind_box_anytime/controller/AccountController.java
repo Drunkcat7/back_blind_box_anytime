@@ -55,7 +55,15 @@ public class AccountController {
         System.out.println(user + password);
         return ResponseEntity.ok(GetStatus.get(this.accountService.login(user, password)));
     }
-    
+
+
+    @PostMapping("/user/luckyDraw")
+    public boolean luckyDraw(Integer seriesId,@CurrentUser CurrentUserInfo user){
+        return this.accountService.luckyDraw(seriesId,user.getUid());
+    }
+
+
+
 
     @GetMapping("/user/test")
     public Map<String, Object> UseTest(@CurrentUser CurrentUserInfo currentUserInfo) {

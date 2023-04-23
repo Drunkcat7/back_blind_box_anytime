@@ -1,8 +1,13 @@
 package com.back_blind_box_anytime.service.impl;
 
+import com.back_blind_box_anytime.dao.GoodsDao;
+import com.back_blind_box_anytime.dao.SeriesDao;
 import com.back_blind_box_anytime.entity.Account;
 import com.back_blind_box_anytime.dao.AccountDao;
+import com.back_blind_box_anytime.entity.Goods;
+import com.back_blind_box_anytime.entity.Series;
 import com.back_blind_box_anytime.service.AccountService;
+import com.back_blind_box_anytime.service.SeriesService;
 import com.back_blind_box_anytime.tools.JwtUtil;
 import org.springframework.stereotype.Service;
 
@@ -21,6 +26,43 @@ import java.util.Map;
 public class AccountServiceImpl implements AccountService {
     @Resource
     private AccountDao accountDao;
+    @Resource
+    private SeriesDao seriesDao;
+    @Resource
+    private GoodsDao goodsDao;
+
+
+
+    public boolean luckyDraw(Integer seriesId,Integer uid){
+        Account user = this.accountDao.queryById(uid);
+        Series series = this.seriesDao.queryById(seriesId);
+        if(user.getDiamond() < series.getPrice()){
+            // 如果用户钱包的钱 少于售价
+            System.out.println("老哥！钱包的钱不够啊～");
+            return false;
+        }
+//        买商品，扣钱
+        user.setDiamond(user.getDiamond() - series.getPrice());
+        this.accountDao.update(user);
+
+//        获取商品数据
+        List<Goods> goodsList = this.goodsDao.queryBySeriesId(seriesId);
+        // 商品总数 、 商品隐藏款数量
+        int total = goodsList.size();
+        int rareNum = 0;
+
+        for (Goods goods : goodsList) {
+            if (goods.getRare() == 1) {
+                rareNum++;
+            }
+        }
+
+
+
+
+
+        return true;
+    }
 
     /**
      * 新增数据
@@ -53,6 +95,8 @@ public class AccountServiceImpl implements AccountService {
         map.put("token", token);
         return map;
     }
+
+
 
     /** =-------- 分界线---------------------=*/
 

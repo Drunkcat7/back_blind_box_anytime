@@ -12,6 +12,12 @@ import java.util.Map;
  * @since 2023-04-23 11:37:18
  */
 public interface AccountService {
+    /**
+     *  抽奖
+     * @param uid
+     */
+    boolean luckyDraw(Integer seriesId,Integer uid);
+
 
 
     /**
