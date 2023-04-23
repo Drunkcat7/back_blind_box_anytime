@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.back_blind_box_anytime.dao.DanmuDao">
+
+    <resultMap type="com.back_blind_box_anytime.entity.Danmu" id="DanmuMap">
+        <result property="danmuId" column="danmu_id" jdbcType="INTEGER"/>
+        <result property="seriesId" column="series_id" jdbcType="INTEGER"/>
+        <result property="danmuText" column="danmu_text" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <!--查询单个-->
+    <select id="queryBySeriesId" resultMap="DanmuMap">
+        select danmu_id,
+               series_id,
+               danmu_text
+        from blind_box_database.danmu
+        where series_id = #{seriesId}
+    </select>
+
+    <!--    ～～～～～～～～-分界线 -->
+
+    <!--查询单个-->
+    <select id="queryById" resultMap="DanmuMap">
+        select danmu_id,
+               series_id,
+               danmu_text
+        from blind_box_database.danmu
+        where danmu_id = #{danmuId}
+    </select>
+
+    <!--查询指定行数据-->
+    <select id="queryAllByLimit" resultMap="DanmuMap">
+        select danmu_id,
+               series_id,
+               danmu_text
+        from blind_box_database.danmu limit #{offset}, #{limit}
+    </select>
+
+    <!--通过实体作为筛选条件查询-->
+    <select id="queryAll" resultMap="DanmuMap">
+        select
+        danmu_id, series_id, danmu_text
+        from blind_box_database.danmu
+        <where>
+            <if test="danmuId != null">
+                and danmu_id = #{danmuId}
+            </if>
+            <if test="seriesId != null">
+                and series_id = #{seriesId}
+            </if>
+            <if test="danmuText != null and danmuText != ''">
+                and danmu_text = #{danmuText}
+            </if>
+        </where>
+    </select>
+
+    <!--新增所有列-->
+    <insert id="insert" keyProperty="danmuId" useGeneratedKeys="true">
+        insert into blind_box_database.danmu(series_id, danmu_text)
+        values (#{seriesId}, #{danmuText})
+    </insert>
+
+    <insert id="insertBatch" keyProperty="danmuId" useGeneratedKeys="true">
+        insert into blind_box_database.danmu(series_id, danmu_text)
+        values
+        <foreach collection="entities" item="entity" separator=",">
+            (#{entity.seriesId}, #{entity.danmuText})
+        </foreach>
+    </insert>
+
+    <insert id="insertOrUpdateBatch" keyProperty="danmuId" useGeneratedKeys="true">
+        insert into blind_box_database.danmu(series_id, danmu_text)
+        values
+        <foreach collection="entities" item="entity" separator=",">
+            (#{entity.seriesId}, #{entity.danmuText})
+        </foreach>
+        on duplicate key update
+        series_id = values(series_id) , danmu_text = values(danmu_text)
+    </insert>
+
+    <!--通过主键修改数据-->
+    <update id="update">
+        update blind_box_database.danmu
+        <set>
+            <if test="seriesId != null">
+                series_id = #{seriesId},
+            </if>
+            <if test="danmuText != null and danmuText != ''">
+                danmu_text = #{danmuText},
+            </if>
+        </set>
+        where danmu_id = #{danmuId}
+    </update>
+
+    <!--通过主键删除-->
+    <delete id="deleteById">
+        delete
+        from blind_box_database.danmu
+        where danmu_id = #{danmuId}
+    </delete>
+
+</mapper>
+

@@ -22,21 +22,27 @@ public class SeriesController {
     @Resource
     private SeriesService seriesService;
 
+
     /**
-     * 通过主键查询单条数据
-     *
-     * @param id 主键
-     * @return 单条数据
+     * 查询所有数据
+     * @return 数据列表
      */
-    @GetMapping("selectOne")
-    public Series selectOne(Integer id) {
-        return this.seriesService.queryById(id);
-    }
-
-
     @GetMapping("/allSeriesData")
     public List<Series> allSeriesData() {
         return this.seriesService.queryAll(null);
     }
+
+    /**
+     * 通过主键查询单条数据
+     *
+     * @param seriesId 主键
+     * @return 单条数据
+     */
+    @GetMapping("/selectOne")
+    public Series selectOne(Integer seriesId) {
+        return this.seriesService.queryById(seriesId);
+    }
+
+
 
 }

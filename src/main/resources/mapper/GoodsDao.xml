@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.back_blind_box_anytime.dao.GoodsDao">
+
+    <resultMap type="com.back_blind_box_anytime.entity.Goods" id="GoodsMap">
+        <result property="goodsId" column="goods_id" jdbcType="INTEGER"/>
+        <result property="seriesId" column="series_id" jdbcType="INTEGER"/>
+        <result property="goodsImg" column="goods_img" jdbcType="VARCHAR"/>
+        <result property="goodsName" column="goods_name" jdbcType="VARCHAR"/>
+        <result property="recoveryPrice" column="recovery_price" jdbcType="NUMERIC"/>
+        <result property="rare" column="rare" jdbcType="INTEGER"/>
+    </resultMap>
+
+    <!--通过series_id查询-->
+    <select id="queryBySeriesId" resultMap="GoodsMap">
+        select goods_id,
+               series_id,
+               goods_img,
+               goods_name,
+               recovery_price,
+               rare
+        from blind_box_database.goods
+        where series_id = #{seriesId}
+    </select>
+
+<!--    ～～～～～～～～-分界线 -->
+
+    <!--查询单个-->
+    <select id="queryById" resultMap="GoodsMap">
+        select goods_id,
+               series_id,
+               goods_img,
+               goods_name,
+               recovery_price,
+               rare
+        from blind_box_database.goods
+        where goods_id = #{goodsId}
+    </select>
+
+    <!--查询指定行数据-->
+    <select id="queryAllByLimit" resultMap="GoodsMap">
+        select goods_id,
+               series_id,
+               goods_img,
+               goods_name,
+               recovery_price,
+               rare
+        from blind_box_database.goods limit #{offset}, #{limit}
+    </select>
+
+    <!--通过实体作为筛选条件查询-->
+    <select id="queryAll" resultMap="GoodsMap">
+        select
+        goods_id, series_id, goods_img, goods_name, recovery_price, rare
+        from blind_box_database.goods
+        <where>
+            <if test="goodsId != null">
+                and goods_id = #{goodsId}
+            </if>
+            <if test="seriesId != null">
+                and series_id = #{seriesId}
+            </if>
+            <if test="goodsImg != null and goodsImg != ''">
+                and goods_img = #{goodsImg}
+            </if>
+            <if test="goodsName != null and goodsName != ''">
+                and goods_name = #{goodsName}
+            </if>
+            <if test="recoveryPrice != null">
+                and recovery_price = #{recoveryPrice}
+            </if>
+            <if test="rare != null">
+                and rare = #{rare}
+            </if>
+        </where>
+    </select>
+
+    <!--新增所有列-->
+    <insert id="insert" keyProperty="goodsId" useGeneratedKeys="true">
+        insert into blind_box_database.goods(series_id, goods_img, goods_name, recovery_price, rare)
+        values (#{seriesId}, #{goodsImg}, #{goodsName}, #{recoveryPrice}, #{rare})
+    </insert>
+
+    <insert id="insertBatch" keyProperty="goodsId" useGeneratedKeys="true">
+        insert into blind_box_database.goods(series_id, goods_img, goods_name, recovery_price, rare)
+        values
+        <foreach collection="entities" item="entity" separator=",">
+            (#{entity.seriesId}, #{entity.goodsImg}, #{entity.goodsName}, #{entity.recoveryPrice}, #{entity.rare})
+        </foreach>
+    </insert>
+
+    <insert id="insertOrUpdateBatch" keyProperty="goodsId" useGeneratedKeys="true">
+        insert into blind_box_database.goods(series_id, goods_img, goods_name, recovery_price, rare)
+        values
+        <foreach collection="entities" item="entity" separator=",">
+            (#{entity.seriesId}, #{entity.goodsImg}, #{entity.goodsName}, #{entity.recoveryPrice}, #{entity.rare})
+        </foreach>
+        on duplicate key update
+        series_id = values(series_id) , goods_img = values(goods_img) , goods_name = values(goods_name) , recovery_price
+        = values(recovery_price) , rare = values(rare)
+    </insert>
+
+    <!--通过主键修改数据-->
+    <update id="update">
+        update blind_box_database.goods
+        <set>
+            <if test="seriesId != null">
+                series_id = #{seriesId},
+            </if>
+            <if test="goodsImg != null and goodsImg != ''">
+                goods_img = #{goodsImg},
+            </if>
+            <if test="goodsName != null and goodsName != ''">
+                goods_name = #{goodsName},
+            </if>
+            <if test="recoveryPrice != null">
+                recovery_price = #{recoveryPrice},
+            </if>
+            <if test="rare != null">
+                rare = #{rare},
+            </if>
+        </set>
+        where goods_id = #{goodsId}
+    </update>
+
+    <!--通过主键删除-->
+    <delete id="deleteById">
+        delete
+        from blind_box_database.goods
+        where goods_id = #{goodsId}
+    </delete>
+
+</mapper>
+
