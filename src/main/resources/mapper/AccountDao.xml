@@ -6,22 +6,112 @@
         <result property="uid" column="uid" jdbcType="INTEGER"/>
         <result property="user" column="user" jdbcType="VARCHAR"/>
         <result property="password" column="password" jdbcType="VARCHAR"/>
-        <result property="level" column="level" jdbcType="INTEGER"/>
+        <result property="diamond" column="diamond" jdbcType="NUMERIC"/>
     </resultMap>
-    <!--新增所有列==>注册-->
+
+<!-- 新增所有列 ==> 注册 -->
     <insert id="insert" keyProperty="uid" useGeneratedKeys="true">
-        insert into account(user, password)
-        values (#{user}, #{password})
+        INSERT INTO account(user,password)
+        VALUES(#{user},#{password});
     </insert>
-    <!--登录-->
+
+<!-- 登录-->
     <select id="login" resultMap="AccountMap">
+        SELECT uid,user,password,diamond
+        FROM account
+        WHERE user = #{user}
+        AND password = #{password}
+    </select>
+
+<!--    ～～～～～～～～～分界线～～～～～～～～～～ -->
+
+    <!--查询单个-->
+    <select id="queryById" resultMap="AccountMap">
         select uid,
                user,
                password,
-               level
-        from account
-        where user = #{user}
-          and password = #{password}
+               diamond
+        from blind_box_database.account
+        where uid = #{uid}
     </select>
+
+    <!--查询指定行数据-->
+    <select id="queryAllByLimit" resultMap="AccountMap">
+        select uid,
+               user,
+               password,
+               diamond
+        from blind_box_database.account limit #{offset}, #{limit}
+    </select>
+
+    <!--通过实体作为筛选条件查询-->
+    <select id="queryAll" resultMap="AccountMap">
+        select
+        uid, user, password, diamond
+        from blind_box_database.account
+        <where>
+            <if test="uid != null">
+                and uid = #{uid}
+            </if>
+            <if test="user != null and user != ''">
+                and user = #{user}
+            </if>
+            <if test="password != null and password != ''">
+                and password = #{password}
+            </if>
+            <if test="diamond != null">
+                and diamond = #{diamond}
+            </if>
+        </where>
+    </select>
+
+    <!--新增所有列-->
+<!--    <insert id="insert" keyProperty="uid" useGeneratedKeys="true">-->
+<!--        insert into blind_box_database.account(user, password, diamond)-->
+<!--        values (#{user}, #{password}, #{diamond})-->
+<!--    </insert>-->
+
+    <insert id="insertBatch" keyProperty="uid" useGeneratedKeys="true">
+        insert into blind_box_database.account(user, password, diamond)
+        values
+        <foreach collection="entities" item="entity" separator=",">
+            (#{entity.user}, #{entity.password}, #{entity.diamond})
+        </foreach>
+    </insert>
+
+    <insert id="insertOrUpdateBatch" keyProperty="uid" useGeneratedKeys="true">
+        insert into blind_box_database.account(user, password, diamond)
+        values
+        <foreach collection="entities" item="entity" separator=",">
+            (#{entity.user}, #{entity.password}, #{entity.diamond})
+        </foreach>
+        on duplicate key update
+        user = values(user) , password = values(password) , diamond = values(diamond)
+    </insert>
+
+    <!--通过主键修改数据-->
+    <update id="update">
+        update blind_box_database.account
+        <set>
+            <if test="user != null and user != ''">
+                user = #{user},
+            </if>
+            <if test="password != null and password != ''">
+                password = #{password},
+            </if>
+            <if test="diamond != null">
+                diamond = #{diamond},
+            </if>
+        </set>
+        where uid = #{uid}
+    </update>
+
+    <!--通过主键删除-->
+    <delete id="deleteById">
+        delete
+        from blind_box_database.account
+        where uid = #{uid}
+    </delete>
+
 </mapper>
 

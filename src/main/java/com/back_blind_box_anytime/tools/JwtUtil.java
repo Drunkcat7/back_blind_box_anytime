@@ -23,7 +23,7 @@ public class JwtUtil {
      * @param user 用户名称
      * @return JWT规则生成的token
      */
-    public static String getJwtToken(Integer uid, String user, Integer level) {
+    public static String getJwtToken(Integer uid, String user) {
         String JwtToken = Jwts.builder()
                 .setHeaderParam("typ", "JWT")
                 .setHeaderParam("alg", "HS256")
@@ -32,7 +32,6 @@ public class JwtUtil {
                 .setExpiration(new Date(System.currentTimeMillis() + EXPIRE))//token失效时间
                 .claim("uid", uid)
                 .claim("user", user)
-                .claim("level", level)
                 // HS256算法实际上就是MD5加盐值，此时APP_SECRET就代表盐值
                 .signWith(SignatureAlgorithm.HS256, APP_SECRET)
                 .compact();
@@ -89,7 +88,6 @@ public class JwtUtil {
         CurrentUserInfo currentUser = new CurrentUserInfo();
         currentUser.setUid((Integer) claims.get("uid"));
         currentUser.setUser((String) claims.get("user"));
-        currentUser.setLevel((Integer) claims.get("level"));
         return currentUser;
     }
 }

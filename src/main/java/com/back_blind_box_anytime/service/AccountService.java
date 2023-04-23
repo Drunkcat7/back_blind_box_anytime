@@ -2,19 +2,20 @@ package com.back_blind_box_anytime.service;
 
 import com.back_blind_box_anytime.entity.Account;
 
+import java.util.List;
 import java.util.Map;
 
 /**
  * (Account)表服务接口
  *
  * @author makejava
- * @since 2023-04-10 17:21:43
+ * @since 2023-04-23 11:37:18
  */
 public interface AccountService {
 
 
     /**
-     * 新增数据==>用户注册
+     * 新增数据
      *
      * @param account 实例对象
      * @return 实例对象
@@ -28,5 +29,40 @@ public interface AccountService {
      * @return 登录的对象
      */
     Map<String,Object> login(String user, String password);
+
+    /** ——————-——-——-——分界线——-——————--——--*/
+    /**
+     * 通过ID查询单条数据
+     *
+     * @param uid 主键
+     * @return 实例对象
+     */
+    Account queryById(Integer uid);
+
+    /**
+     * 查询多条数据
+     *
+     * @param offset 查询起始位置
+     * @param limit  查询条数
+     * @return 对象列表
+     */
+    List<Account> queryAllByLimit(int offset, int limit);
+
+
+    /**
+     * 修改数据
+     *
+     * @param account 实例对象
+     * @return 实例对象
+     */
+    Account update(Account account);
+
+    /**
+     * 通过主键删除数据
+     *
+     * @param uid 主键
+     * @return 是否成功
+     */
+    boolean deleteById(Integer uid);
 
 }

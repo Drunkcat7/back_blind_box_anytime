@@ -6,22 +6,26 @@ import java.io.Serializable;
  * (Account)实体类
  *
  * @author makejava
- * @since 2023-04-10 21:23:01
+ * @since 2023-04-23 11:36:32
  */
 public class Account implements Serializable {
-    private static final long serialVersionUID = -44072115420120065L;
+    private static final long serialVersionUID = -20395639229409357L;
     /**
-     * uid
+     * 用户id
      */
     private Integer uid;
-    
+    /**
+     * 用户名
+     */
     private String user;
-    
+    /**
+     * 密码
+     */
     private String password;
     /**
-     * 用户等级
+     * 钻石(钱)
      */
-    private Integer level;
+    private Double diamond;
 
 
     public Integer getUid() {
@@ -48,13 +52,12 @@ public class Account implements Serializable {
         this.password = password;
     }
 
-    public Integer getLevel() {
-        return level;
+    public Double getDiamond() {
+        return diamond;
     }
 
-    public void setLevel(Integer level) {
-        this.level = level;
+    public void setDiamond(Double diamond) {
+        this.diamond = diamond;
     }
 
 }
-

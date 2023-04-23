@@ -38,6 +38,8 @@ public class AccountController {
      */
     @PostMapping("/reg")
     public ResponseEntity<Account> registeredAdd(Account account) {
+        System.out.println(account.getUser() + account.getPassword());
+
         return ResponseEntity.ok(this.accountService.insert(account));
     }
 
@@ -50,6 +52,7 @@ public class AccountController {
      */
     @PostMapping("/login")
     public ResponseEntity<Map<String, Object>> login(String user, String password) {
+        System.out.println(user + password);
         return ResponseEntity.ok(GetStatus.get(this.accountService.login(user, password)));
     }
     
