@@ -31,6 +31,8 @@ public class AccountServiceImpl implements AccountService {
     private ProbabilityDao probabilityDao;
     @Resource
     private MyboxDao myboxDao;
+    @Resource
+    private DanmuDao danmuDao;
 
 
 
@@ -74,6 +76,7 @@ public class AccountServiceImpl implements AccountService {
             random_2 = (int) (Math.random() * goodsRareList.size());
             winGoods = goodsRareList.get(random_2);
             System.out.println("稀有款：" + random_2 + winGoods.getGoodsName());
+
         }else {
 //            抽中普通款，进行第二轮抽奖
             random_2 = (int) (Math.random() * goodsOrdinaryList.size());
@@ -81,13 +84,18 @@ public class AccountServiceImpl implements AccountService {
             System.out.println("普通款：" + random_2 + winGoods.getGoodsName());
         }
 
-
         // 生成订单
         Mybox mybox = new Mybox();
         mybox.setGoodsId(winGoods.getGoodsId());
         mybox.setSeriesId(winGoods.getSeriesId());
         mybox.setUid(uid);
         this.myboxDao.insertOrder(mybox);
+
+//            添加弹幕
+        Danmu danmu = new Danmu();
+        danmu.setSeriesId(seriesId);
+        danmu.setDanmuText(user.getUser() + "抽中" + winGoods.getGoodsName());
+        this.danmuDao.insert(danmu);
 
         return winGoods;
     }
