@@ -37,7 +37,13 @@ public interface AccountService {
      */
     Map<String,Object> login(String user, String password);
 
-    /** ——————-——-——-——分界线——-——————--——--*/
+    /**
+     * 查询用户信息
+     * @param uid
+     * @return
+     */
+    Map<String, Object> queryUserInfo(Integer uid);
+
     /**
      * 通过ID查询单条数据
      *
@@ -45,6 +51,17 @@ public interface AccountService {
      * @return 实例对象
      */
     Account queryById(Integer uid);
+
+    /**
+     * 充值
+     * @param diamond
+     * @param uid
+     * @return
+     */
+    Boolean topUp(Double diamond,Integer uid);
+
+    /** ——————-——-——-——分界线——-——————--——--*/
+
 
     /**
      * 查询多条数据

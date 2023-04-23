@@ -7,10 +7,7 @@ import com.back_blind_box_anytime.my_interceptor.CurrentUserInfo;
 import com.back_blind_box_anytime.service.AccountService;
 import com.back_blind_box_anytime.tools.GetStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import java.util.HashMap;
@@ -57,10 +54,36 @@ public class AccountController {
         return ResponseEntity.ok(GetStatus.get(this.accountService.login(user, password)));
     }
 
-
+    /**
+     * 抽奖接口
+     * @param seriesId
+     * @param user
+     * @return 中奖商品
+     */
     @PostMapping("/user/luckyDraw")
     public Goods luckyDraw(Integer seriesId, @CurrentUser CurrentUserInfo user){
         return this.accountService.luckyDraw(seriesId,user.getUid());
+    }
+
+    /**
+     * 获取用户信息
+     * @param currentUserInfo
+     * @return 用户名 钻石
+     */
+    @GetMapping("/user/queryUserInfo")
+    public Map<String, Object> queryUserInfo(@CurrentUser CurrentUserInfo currentUserInfo) {
+        return this.accountService.queryUserInfo(currentUserInfo.getUid());
+    }
+
+    /**
+     * 充值
+     * @param diamond
+     * @param currentUserInfo
+     * @return
+     */
+    @PutMapping("/user/topUp")
+    public Boolean topUp(Double diamond,@CurrentUser CurrentUserInfo currentUserInfo) {
+        return this.accountService.topUp(diamond,currentUserInfo.getUid());
     }
 
 

@@ -23,8 +23,6 @@
         AND password = #{password}
     </select>
 
-<!--    ～～～～～～～～～分界线～～～～～～～～～～ -->
-
     <!--查询单个-->
     <select id="queryById" resultMap="AccountMap">
         select uid,
@@ -34,6 +32,10 @@
         from blind_box_database.account
         where uid = #{uid}
     </select>
+
+<!--    ～～～～～～～～～分界线～～～～～～～～～～ -->
+
+
 
     <!--查询指定行数据-->
     <select id="queryAllByLimit" resultMap="AccountMap">

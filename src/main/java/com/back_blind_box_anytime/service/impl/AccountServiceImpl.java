@@ -132,11 +132,6 @@ public class AccountServiceImpl implements AccountService {
         return map;
     }
 
-
-
-    /** =-------- 分界线---------------------=*/
-
-
     /**
      * 通过ID查询单条数据
      *
@@ -144,9 +139,41 @@ public class AccountServiceImpl implements AccountService {
      * @return 实例对象
      */
     @Override
+    public Map<String, Object> queryUserInfo(Integer uid) {
+        Account account = this.accountDao.queryById(uid);
+        Map<String, Object> map = new HashMap<>();
+        map.put("user", account.getUser());
+        map.put("diamond", account.getDiamond());
+        return map;
+    }
+
+    @Override
     public Account queryById(Integer uid) {
         return this.accountDao.queryById(uid);
     }
+
+    /**
+     * 充值
+     * @param diamond
+     * @param uid
+     * @return
+     */
+    @Override
+    public Boolean topUp(Double diamond, Integer uid) {
+        if (diamond < 0){
+            return false;
+        }
+        Account account = this.accountDao.queryById(uid);
+        account.setDiamond(account.getDiamond()+diamond);
+        this.accountDao.update(account);
+        return true;
+    }
+
+
+    /** =-------- 分界线---------------------=*/
+
+
+
 
     /**
      * 查询多条数据
