@@ -1,10 +1,12 @@
 package com.back_blind_box_anytime.service.impl;
 
 import com.back_blind_box_anytime.dao.GoodsDao;
+import com.back_blind_box_anytime.dao.ProbabilityDao;
 import com.back_blind_box_anytime.dao.SeriesDao;
 import com.back_blind_box_anytime.entity.Account;
 import com.back_blind_box_anytime.dao.AccountDao;
 import com.back_blind_box_anytime.entity.Goods;
+import com.back_blind_box_anytime.entity.Probability;
 import com.back_blind_box_anytime.entity.Series;
 import com.back_blind_box_anytime.service.AccountService;
 import com.back_blind_box_anytime.service.SeriesService;
@@ -12,6 +14,7 @@ import com.back_blind_box_anytime.tools.JwtUtil;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -30,16 +33,18 @@ public class AccountServiceImpl implements AccountService {
     private SeriesDao seriesDao;
     @Resource
     private GoodsDao goodsDao;
+    @Resource
+    private ProbabilityDao probabilityDao;
 
 
 
-    public boolean luckyDraw(Integer seriesId,Integer uid){
+    public Goods luckyDraw(Integer seriesId,Integer uid){
         Account user = this.accountDao.queryById(uid);
         Series series = this.seriesDao.queryById(seriesId);
         if(user.getDiamond() < series.getPrice()){
             // 如果用户钱包的钱 少于售价
             System.out.println("老哥！钱包的钱不够啊～");
-            return false;
+            return null;
         }
 //        买商品，扣钱
         user.setDiamond(user.getDiamond() - series.getPrice());
@@ -47,21 +52,40 @@ public class AccountServiceImpl implements AccountService {
 
 //        获取商品数据
         List<Goods> goodsList = this.goodsDao.queryBySeriesId(seriesId);
+        List<Goods> goodsOrdinaryList = new ArrayList<Goods>();
+        List<Goods> goodsRareList = new ArrayList<Goods>();
         // 商品总数 、 商品隐藏款数量
-        int total = goodsList.size();
-        int rareNum = 0;
-
         for (Goods goods : goodsList) {
             if (goods.getRare() == 1) {
-                rareNum++;
+                goodsRareList.add(goods);
+            }else {
+                goodsOrdinaryList.add(goods);
             }
         }
+//        抽中隐藏款概率 %
+        int probabilityNum = this.probabilityDao.queryBySeriesId(seriesId).getProbability();
+//        抽奖范围
+        int max = (int)Math.ceil(100/probabilityNum);
 
+//        随机数,抽到1代表中了隐藏款
+        int random_1 = (int) (Math.random()*max+1);
+        int random_2 = 0;
 
+        Goods winGoods;
 
+        if (random_1 == 1){
+//            抽中稀有款，进行第二轮抽奖
+            random_2 = (int) (Math.random() * goodsRareList.size());
+            System.out.println(" 抽中稀有款，进行第二轮抽奖"+random_2);
+            winGoods = goodsRareList.get(random_2);
+        }else {
+//            抽中普通款，进行第二轮抽奖
+            random_2 = (int) (Math.random() * goodsOrdinaryList.size());
+            System.out.println(" 普通，进行第二轮抽奖"+random_2);
+            winGoods = goodsOrdinaryList.get(random_2);
+        }
 
-
-        return true;
+        return winGoods;
     }
 
     /**

@@ -1,6 +1,7 @@
 package com.back_blind_box_anytime.service;
 
 import com.back_blind_box_anytime.entity.Account;
+import com.back_blind_box_anytime.entity.Goods;
 
 import java.util.List;
 import java.util.Map;
@@ -16,7 +17,7 @@ public interface AccountService {
      *  抽奖
      * @param uid
      */
-    boolean luckyDraw(Integer seriesId,Integer uid);
+    Goods luckyDraw(Integer seriesId, Integer uid);
 
 
 

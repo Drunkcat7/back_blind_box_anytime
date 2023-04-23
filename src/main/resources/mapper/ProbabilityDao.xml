@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.back_blind_box_anytime.dao.ProbabilityDao">
+
+    <resultMap type="com.back_blind_box_anytime.entity.Probability" id="ProbabilityMap">
+        <result property="probabilityId" column="probability_id" jdbcType="INTEGER"/>
+        <result property="seriesId" column="series_id" jdbcType="INTEGER"/>
+        <result property="probability" column="probability" jdbcType="INTEGER"/>
+    </resultMap>
+
+    <!--查询单个-->
+    <select id="queryBySeriesId" resultMap="ProbabilityMap">
+        select probability_id,
+               series_id,
+               probability
+        from blind_box_database.probability
+        where series_id = #{seriesId}
+    </select>
+
+
+    <!--查询单个-->
+    <select id="queryById" resultMap="ProbabilityMap">
+        select probability_id,
+               series_id,
+               probability
+        from blind_box_database.probability
+        where probability_id = #{probabilityId}
+    </select>
+
+    <!--查询指定行数据-->
+    <select id="queryAllByLimit" resultMap="ProbabilityMap">
+        select probability_id,
+               series_id,
+               probability
+        from blind_box_database.probability limit #{offset}, #{limit}
+    </select>
+
+    <!--通过实体作为筛选条件查询-->
+    <select id="queryAll" resultMap="ProbabilityMap">
+        select
+        probability_id, series_id, probability
+        from blind_box_database.probability
+        <where>
+            <if test="probabilityId != null">
+                and probability_id = #{probabilityId}
+            </if>
+            <if test="seriesId != null">
+                and series_id = #{seriesId}
+            </if>
+            <if test="probability != null">
+                and probability = #{probability}
+            </if>
+        </where>
+    </select>
+
+    <!--新增所有列-->
+    <insert id="insert" keyProperty="probabilityId" useGeneratedKeys="true">
+        insert into blind_box_database.probability(series_id, probability)
+        values (#{seriesId}, #{probability})
+    </insert>
+
+    <insert id="insertBatch" keyProperty="probabilityId" useGeneratedKeys="true">
+        insert into blind_box_database.probability(series_id, probability)
+        values
+        <foreach collection="entities" item="entity" separator=",">
+            (#{entity.seriesId}, #{entity.probability})
+        </foreach>
+    </insert>
+
+    <insert id="insertOrUpdateBatch" keyProperty="probabilityId" useGeneratedKeys="true">
+        insert into blind_box_database.probability(series_id, probability)
+        values
+        <foreach collection="entities" item="entity" separator=",">
+            (#{entity.seriesId}, #{entity.probability})
+        </foreach>
+        on duplicate key update
+        series_id = values(series_id) , probability = values(probability)
+    </insert>
+
+    <!--通过主键修改数据-->
+    <update id="update">
+        update blind_box_database.probability
+        <set>
+            <if test="seriesId != null">
+                series_id = #{seriesId},
+            </if>
+            <if test="probability != null">
+                probability = #{probability},
+            </if>
+        </set>
+        where probability_id = #{probabilityId}
+    </update>
+
+    <!--通过主键删除-->
+    <delete id="deleteById">
+        delete
+        from blind_box_database.probability
+        where probability_id = #{probabilityId}
+    </delete>
+
+</mapper>
+

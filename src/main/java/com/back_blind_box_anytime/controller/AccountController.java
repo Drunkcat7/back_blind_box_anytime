@@ -1,6 +1,7 @@
 package com.back_blind_box_anytime.controller;
 
 import com.back_blind_box_anytime.entity.Account;
+import com.back_blind_box_anytime.entity.Goods;
 import com.back_blind_box_anytime.my_interceptor.CurrentUser;
 import com.back_blind_box_anytime.my_interceptor.CurrentUserInfo;
 import com.back_blind_box_anytime.service.AccountService;
@@ -58,7 +59,7 @@ public class AccountController {
 
 
     @PostMapping("/user/luckyDraw")
-    public boolean luckyDraw(Integer seriesId,@CurrentUser CurrentUserInfo user){
+    public Goods luckyDraw(Integer seriesId, @CurrentUser CurrentUserInfo user){
         return this.accountService.luckyDraw(seriesId,user.getUid());
     }
 
