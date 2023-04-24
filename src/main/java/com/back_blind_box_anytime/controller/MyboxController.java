@@ -1,10 +1,13 @@
 package com.back_blind_box_anytime.controller;
 
 import com.back_blind_box_anytime.entity.Mybox;
+import com.back_blind_box_anytime.my_interceptor.CurrentUser;
+import com.back_blind_box_anytime.my_interceptor.CurrentUserInfo;
 import com.back_blind_box_anytime.service.MyboxService;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import java.util.List;
 
 /**
  * (Mybox)表控制层
@@ -13,7 +16,7 @@ import javax.annotation.Resource;
  * @since 2023-04-23 22:58:34
  */
 @RestController
-@RequestMapping("mybox")
+    @RequestMapping("mybox")
 public class MyboxController {
     /**
      * 服务对象
@@ -32,4 +35,13 @@ public class MyboxController {
         return this.myboxService.queryById(id);
     }
 
+    /**
+     * 查询最新的3条中奖数据
+     * @param user
+     * @return
+     */
+    @GetMapping("/user/selectNew")
+    public List<String> selectNew(@CurrentUser CurrentUserInfo user) {
+        return this.myboxService.queryNewGoods(user.getUid());
+    }
 }

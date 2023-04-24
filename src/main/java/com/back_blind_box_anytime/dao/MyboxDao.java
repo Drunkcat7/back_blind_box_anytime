@@ -20,6 +20,8 @@ public interface MyboxDao {
      */
     int insertOrder(Mybox mybox);
 
+    List<String> queryNewGoods(@Param("uid") Integer uid);
+
     /**-----分割线-------------*/
 
     /**

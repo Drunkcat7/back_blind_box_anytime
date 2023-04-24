@@ -25,6 +25,16 @@ public class MyboxServiceImpl implements MyboxService {
     }
 
     /**
+     * 查询最新中奖3条数据
+     * @param uid
+     * @return
+     */
+    @Override
+    public List<String> queryNewGoods(Integer uid) {
+        return this.myboxDao.queryNewGoods(uid);
+    }
+
+    /**
      * 通过ID查询单条数据
      *
      * @param myboxId 主键

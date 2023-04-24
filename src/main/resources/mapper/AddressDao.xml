@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.back_blind_box_anytime.dao.AddressDao">
+
+    <resultMap type="com.back_blind_box_anytime.entity.Address" id="AddressMap">
+        <result property="addressId" column="address_id" jdbcType="INTEGER"/>
+        <result property="consignee" column="consignee" jdbcType="VARCHAR"/>
+        <result property="tel" column="tel" jdbcType="VARCHAR"/>
+        <result property="address" column="address" jdbcType="VARCHAR"/>
+        <result property="detailedAddress" column="detailed_address" jdbcType="VARCHAR"/>
+        <result property="defaultContact" column="default_contact" jdbcType="INTEGER"/>
+        <result property="uid" column="uid" jdbcType="INTEGER"/>
+    </resultMap>
+
+    <!--通过uid查询-->
+    <select id="queryByUid" resultMap="AddressMap">
+        select address_id,
+               consignee,
+               tel,
+               address,
+               detailed_address,
+               default_contact,
+               uid
+        from address
+        where uid = #{uid}
+    </select>
+
+    <!--通过 uid 和 address_id 修改数据-->
+    <update id="updateByUidAndAddressId">
+        update address
+        <set>
+            <if test="consignee != null and consignee != ''">
+                consignee = #{consignee},
+            </if>
+            <if test="tel != null and tel != ''">
+                tel = #{tel},
+            </if>
+            <if test="address != null and address != ''">
+                address = #{address},
+            </if>
+            <if test="detailedAddress != null and detailedAddress != ''">
+                detailed_address = #{detailedAddress},
+            </if>
+        </set>
+        where address_id = #{addressId} and uid = #{uid}
+    </update>
+
+    <!--通过 uid 和 address_id 删除-->
+    <delete id="deleteByUidAndAddressId">
+        delete
+        from address
+        where address_id = #{addressId} and uid = #{uid}
+    </delete>
+
+
+    <!--通过 uid defaultContact(默认地址值)全部改为0-->
+    <update id="updateDefaultContact0ByUid">
+        update address
+        set default_contact = 0
+        where uid = #{uid}
+    </update>
+
+    <!--通过 uid 和 address_id  defaultContact(默认地址值)改为1-->
+    <update id="updateDefaultContact1ByUidAndAddressId">
+        update address
+        set default_contact = 1
+        where  address_id = #{addressId} and uid = #{uid}
+    </update>
+
+    <!--新增所有列-->
+    <insert id="insert" keyProperty="addressId" useGeneratedKeys="true">
+        insert into address(consignee, tel, address, detailed_address, default_contact, uid)
+        values (#{consignee}, #{tel}, #{address}, #{detailedAddress}, #{defaultContact}, #{uid})
+    </insert>
+
+
+
+    <!--通过uid查询-->
+    <select id="queryByUidAndDefaultContact" resultMap="AddressMap">
+        select address_id,
+               consignee,
+               tel,
+               address,
+               detailed_address,
+               default_contact,
+               uid
+        from address
+        where uid = #{uid} and default_contact = 1
+    </select>
+    <!--查询单个-->
+    <select id="queryById" resultMap="AddressMap">
+        select address_id,
+               consignee,
+               tel,
+               address,
+               detailed_address,
+               default_contact,
+               uid
+        from address
+        where address_id = #{addressId}
+    </select>
+    <!-- ～～～～～～～～～～～ -->
+
+</mapper>
+

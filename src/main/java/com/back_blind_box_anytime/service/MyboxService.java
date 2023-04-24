@@ -13,10 +13,14 @@ import java.util.List;
 public interface MyboxService {
     /**
      * 插入订单
+     *
      * @param mybox
      * @return
      */
     int insertOrder(Mybox mybox);
+
+    List<String> queryNewGoods(Integer uid);
+
 
     /**-----分割线-------------*/
 

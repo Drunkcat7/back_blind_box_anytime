@@ -16,6 +16,15 @@
         values (#{uid}, #{seriesId}, #{goodsId})
     </insert>
 
+    <!--查询最新中奖的4条数据-->
+    <select id="queryNewGoods" resultType="java.lang.String">
+        SELECT goods_img
+        FROM mybox,
+             goods
+        WHERE uid = #{uid}
+          and mybox.goods_id = goods.goods_id
+        order by mybox_id DESC LIMIT 4
+    </select>
     <!--查询单个-->
     <select id="queryById" resultMap="MyboxMap">
         select mybox_id,
