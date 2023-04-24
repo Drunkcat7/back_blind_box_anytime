@@ -33,6 +33,17 @@
         where uid = #{uid}
     </select>
 
+    <!--充钱-->
+    <!--通过主键修改数据-->
+    <update id="topUp">
+        update blind_box_database.account
+        <set>
+            <if test="diamond != null">
+                diamond = diamond + #{diamond},
+            </if>
+        </set>
+        where uid = #{uid}
+    </update>
 <!--    ～～～～～～～～～分界线～～～～～～～～～～ -->
 
 

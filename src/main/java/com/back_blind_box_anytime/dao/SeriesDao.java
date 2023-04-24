@@ -22,6 +22,13 @@ public interface SeriesDao {
     Series queryById(Integer seriesId);
 
     /**
+     * 查询用户抽中的所有系列id
+     * @param uid
+     * @return
+     */
+    List<Series> queryHit(@Param("uid") Integer uid);
+
+    /**
      * 查询指定行数据
      *
      * @param offset 查询起始位置

@@ -3,6 +3,7 @@ package com.back_blind_box_anytime.service;
 import com.back_blind_box_anytime.entity.Mybox;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * (Mybox)表服务接口
@@ -21,7 +22,12 @@ public interface MyboxService {
 
     List<String> queryNewGoods(Integer uid);
 
+    List<Map<String, Object>> selectAll(Integer uid);
 
+
+    Boolean backGoods(Integer myboxId ,Integer uid);
+
+    Boolean buy(Integer myboxId);
     /**-----分割线-------------*/
 
 

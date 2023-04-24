@@ -43,6 +43,9 @@ public interface AccountDao {
      */
     Account queryById(Integer uid);
 
+
+
+
     /**
      * 查询指定行数据
      *
@@ -61,7 +64,13 @@ public interface AccountDao {
      */
     List<Account> queryAll(Account account);
 
-
+    /**
+     * 充钱
+     *
+     * @param account 实例对象
+     * @return 影响行数
+     */
+    int topUp(Account account);
 
     /**
      * 批量新增数据（MyBatis原生foreach方法）

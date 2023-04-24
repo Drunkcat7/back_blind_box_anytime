@@ -8,6 +8,8 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 
 /**
  * (Mybox)表控制层
@@ -16,7 +18,7 @@ import java.util.List;
  * @since 2023-04-23 22:58:34
  */
 @RestController
-    @RequestMapping("mybox")
+@RequestMapping("mybox")
 public class MyboxController {
     /**
      * 服务对象
@@ -37,6 +39,7 @@ public class MyboxController {
 
     /**
      * 查询最新的3条中奖数据
+     *
      * @param user
      * @return
      */
@@ -44,4 +47,32 @@ public class MyboxController {
     public List<String> selectNew(@CurrentUser CurrentUserInfo user) {
         return this.myboxService.queryNewGoods(user.getUid());
     }
+
+    /**
+     * 查询用户中奖数据
+     *
+     * @param user
+     * @return
+     */
+    @GetMapping("/user/selectAll")
+    public List<Map<String, Object>> selectAll(@CurrentUser CurrentUserInfo user) {
+        return this.myboxService.selectAll(user.getUid());
+    }
+
+    /**
+     * 反盒
+     *
+     * @param myboxId
+     * @return
+     */
+    @GetMapping("/user/backGoods")
+    public Boolean backGoods(Integer myboxId, @CurrentUser CurrentUserInfo user) {
+        return this.myboxService.backGoods(myboxId, user.getUid());
+    }
+
+    @GetMapping("/user/buy")
+    public Boolean buy(Integer myboxId) {
+        return this.myboxService.buy(myboxId);
+    }
+
 }

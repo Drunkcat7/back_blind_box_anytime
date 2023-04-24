@@ -9,7 +9,17 @@
         <result property="goodsId" column="goods_id" jdbcType="INTEGER"/>
         <result property="status" column="status" jdbcType="INTEGER"/>
     </resultMap>
+    <resultMap type="com.back_blind_box_anytime.entity.HitGoods" id="HitGoodsMap">
+        <result property="goodsId" column="goods_id" jdbcType="INTEGER"/>
+        <result property="seriesId" column="series_id" jdbcType="INTEGER"/>
+        <result property="goodsImg" column="goods_img" jdbcType="VARCHAR"/>
+        <result property="goodsName" column="goods_name" jdbcType="VARCHAR"/>
+        <result property="recoveryPrice" column="recovery_price" jdbcType="NUMERIC"/>
+        <result property="rare" column="rare" jdbcType="INTEGER"/>
+        <result property="status" column="status" jdbcType="INTEGER"/>
+        <result property="myboxId" column="mybox_id" jdbcType="INTEGER"/>
 
+    </resultMap>
     <!--插入订单-->
     <insert id="insertOrder" keyProperty="myboxId" useGeneratedKeys="true">
         insert into blind_box_database.mybox(uid, series_id, goods_id)
@@ -25,6 +35,16 @@
           and mybox.goods_id = goods.goods_id
         order by mybox_id DESC LIMIT 4
     </select>
+    <!--查询系列对应的Goods-->
+    <select id="querySeriesGoods" resultMap="HitGoodsMap">
+        SELECT goods.*, `status`, mybox_id
+        FROM mybox,
+             goods
+        WHERE uid = #{uid}
+          AND mybox.series_id = #{seriesId}
+          AND mybox.goods_id = goods.goods_id
+          AND mybox.series_id = goods.series_id
+    </select>
     <!--查询单个-->
     <select id="queryById" resultMap="MyboxMap">
         select mybox_id,
@@ -34,6 +54,26 @@
                status
         from blind_box_database.mybox
         where mybox_id = #{myboxId}
+    </select>
+
+    <!--通过主键修改数据-->
+    <update id="updateStatus">
+        update blind_box_database.mybox
+        <set>
+            <if test="status != null">
+                `status` = #{status},
+            </if>
+        </set>
+        where mybox_id = #{myboxId}
+    </update>
+    <!--查询回收价格-->
+    <select id="getRecoveryPrice" resultType="java.lang.Integer">
+        SELECT recovery_price
+        FROM mybox,
+             goods
+        WHERE mybox.mybox_id = #{myboxId}
+          AND mybox.goods_id = goods.goods_id
+          AND mybox.series_id = goods.series_id
     </select>
 
     <!--查询指定行数据-->

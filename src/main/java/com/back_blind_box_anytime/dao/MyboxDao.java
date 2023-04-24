@@ -1,5 +1,6 @@
 package com.back_blind_box_anytime.dao;
 
+import com.back_blind_box_anytime.entity.HitGoods;
 import com.back_blind_box_anytime.entity.Mybox;
 import org.apache.ibatis.annotations.Param;
 
@@ -15,12 +16,15 @@ public interface MyboxDao {
 
     /**
      * 插入订单
+     *
      * @param mybox
      * @return
      */
     int insertOrder(Mybox mybox);
 
     List<String> queryNewGoods(@Param("uid") Integer uid);
+
+    List<HitGoods> querySeriesGoods(@Param("uid") Integer uid, @Param("seriesId") Integer seriesId);
 
     /**-----分割线-------------*/
 
@@ -31,6 +35,17 @@ public interface MyboxDao {
      * @return 实例对象
      */
     Mybox queryById(Integer myboxId);
+
+    /**
+     * 修改订单数据
+     *
+     * @param myboxId
+     * @param status
+     * @return
+     */
+    int updateStatus(@Param("myboxId") Integer myboxId, @Param("status") Integer status);
+
+    Integer getRecoveryPrice(Integer myboxId);
 
     /**
      * 查询指定行数据
