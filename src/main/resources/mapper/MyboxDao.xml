@@ -18,8 +18,14 @@
         <result property="rare" column="rare" jdbcType="INTEGER"/>
         <result property="status" column="status" jdbcType="INTEGER"/>
         <result property="myboxId" column="mybox_id" jdbcType="INTEGER"/>
-
     </resultMap>
+    <!--是否购买过该系列-->
+    <select id="checkIsBuy" resultType="java.lang.Integer">
+        select count(1)
+        FROM mybox
+        WHERE uid = #{uid}
+          and series_id = #{seriesId}
+    </select>
     <!--插入订单-->
     <insert id="insertOrder" keyProperty="myboxId" useGeneratedKeys="true">
         insert into blind_box_database.mybox(uid, series_id, goods_id)

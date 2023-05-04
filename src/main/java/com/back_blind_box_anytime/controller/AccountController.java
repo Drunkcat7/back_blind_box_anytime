@@ -10,7 +10,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
-import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -85,16 +84,5 @@ public class AccountController {
     public Boolean topUp(Double diamond,@CurrentUser CurrentUserInfo currentUserInfo) {
         return this.accountService.topUp(diamond,currentUserInfo.getUid());
     }
-
-
-
-
-    @GetMapping("/user/test")
-    public Map<String, Object> UseTest(@CurrentUser CurrentUserInfo currentUserInfo) {
-        Map<String, Object> map = new HashMap<>();
-        map.put("data", currentUserInfo);
-        return map;
-    }
-
 }
 

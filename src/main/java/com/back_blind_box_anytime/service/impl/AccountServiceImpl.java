@@ -35,20 +35,19 @@ public class AccountServiceImpl implements AccountService {
     private DanmuDao danmuDao;
 
 
-
-    public Goods luckyDraw(Integer seriesId,Integer uid){
+    public Goods luckyDraw(Integer seriesId, Integer uid) {
         Account user = this.accountDao.queryById(uid);
         Series series = this.seriesDao.queryById(seriesId);
-        if(user.getDiamond() < series.getPrice()){
+        if (user.getDiamond() < series.getPrice()) {
             // 如果用户钱包的钱 少于售价
             System.out.println("老哥！钱包的钱不够啊～");
             return null;
         }
-//        买商品，扣钱
+        //买商品，扣钱
         user.setDiamond(user.getDiamond() - series.getPrice());
         this.accountDao.update(user);
 
-//        获取商品数据
+        //获取商品数据
         List<Goods> goodsList = this.goodsDao.queryBySeriesId(seriesId);
         List<Goods> goodsOrdinaryList = new ArrayList<Goods>();
         List<Goods> goodsRareList = new ArrayList<Goods>();
@@ -56,28 +55,28 @@ public class AccountServiceImpl implements AccountService {
         for (Goods goods : goodsList) {
             if (goods.getRare() == 1) {
                 goodsRareList.add(goods);
-            }else {
+            } else {
                 goodsOrdinaryList.add(goods);
             }
         }
 //        抽中隐藏款概率 %
         int probabilityNum = this.probabilityDao.queryBySeriesId(seriesId).getProbability();
 //        抽奖范围
-        int max = (int)Math.ceil(100/probabilityNum);
+        int max = (int) Math.ceil(100 / probabilityNum);
 
 //        随机数,抽到1代表中了隐藏款
-        int random_1 = (int) (Math.random()*max+1);
+        int random_1 = (int) (Math.random() * max + 1);
         int random_2 = 0;
 
         Goods winGoods = null;
 
-        if (random_1 == 1){
+        if (random_1 == 1) {
 //            抽中稀有款，进行第二轮抽奖
             random_2 = (int) (Math.random() * goodsRareList.size());
             winGoods = goodsRareList.get(random_2);
             System.out.println("稀有款：" + random_2 + winGoods.getGoodsName());
 
-        }else {
+        } else {
 //            抽中普通款，进行第二轮抽奖
             random_2 = (int) (Math.random() * goodsOrdinaryList.size());
             winGoods = goodsOrdinaryList.get(random_2);
@@ -154,25 +153,24 @@ public class AccountServiceImpl implements AccountService {
 
     /**
      * 充值
+     *
      * @param diamond
      * @param uid
      * @return
      */
     @Override
     public Boolean topUp(Double diamond, Integer uid) {
-        if (diamond < 0){
+        if (diamond < 0) {
             return false;
         }
         Account account = this.accountDao.queryById(uid);
-        account.setDiamond(account.getDiamond()+diamond);
+        account.setDiamond(account.getDiamond() + diamond);
         this.accountDao.update(account);
         return true;
     }
 
 
     /** =-------- 分界线---------------------=*/
-
-
 
 
     /**
@@ -186,7 +184,6 @@ public class AccountServiceImpl implements AccountService {
     public List<Account> queryAllByLimit(int offset, int limit) {
         return this.accountDao.queryAllByLimit(offset, limit);
     }
-
 
 
     /**

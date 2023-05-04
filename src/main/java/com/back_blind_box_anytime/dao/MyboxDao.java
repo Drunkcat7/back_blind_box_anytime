@@ -26,6 +26,23 @@ public interface MyboxDao {
 
     List<HitGoods> querySeriesGoods(@Param("uid") Integer uid, @Param("seriesId") Integer seriesId);
 
+    /**
+     * 修改订单数据
+     *
+     * @param myboxId
+     * @param status
+     * @return
+     */
+    int updateStatus(@Param("myboxId") Integer myboxId, @Param("status") Integer status);
+
+    /**
+     * 检查是否购买过该商品
+     *
+     * @param uid
+     * @param seriesId
+     * @return
+     */
+    Integer checkIsBuy(@Param(("uid")) Integer uid, @Param("seriesId") Integer seriesId);
     /**-----分割线-------------*/
 
     /**
@@ -35,15 +52,6 @@ public interface MyboxDao {
      * @return 实例对象
      */
     Mybox queryById(Integer myboxId);
-
-    /**
-     * 修改订单数据
-     *
-     * @param myboxId
-     * @param status
-     * @return
-     */
-    int updateStatus(@Param("myboxId") Integer myboxId, @Param("status") Integer status);
 
     Integer getRecoveryPrice(Integer myboxId);
 
